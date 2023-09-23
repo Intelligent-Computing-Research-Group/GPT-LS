@@ -37,16 +37,16 @@ Here are few resources to install the packages (if not using *requirements.txt*)
 
 
 
-If you use OpenABC-D dataset, please cite:
+
+## Cite Us
 
 ```
-@misc{chowdhury2021openabcd,
-      title={OpenABC-D: A Large-Scale Dataset For Machine Learning Guided Integrated Circuit Synthesis}, 
-      author={Animesh Basak Chowdhury and Benjamin Tan and Ramesh Karri and Siddharth Garg},
-      year={2021},
-      eprint={2110.11292},
-      archivePrefix={arXiv},
-      primaryClass={cs.LG}
+@misc{chenyang2023gptls,
+      title={GPT-LS: Generative Pre-Trained Transformer with Off-line Reinforcement Learning for Logic Synthesiss}, 
+      author={Chenyang Lv, Ziling Wei, Weikang Qian, Junjie Ye, Chang Feng, Zhezhi He},
+booktitle={40th International Conference on Computer Design (ICCD)},
+year={2023},
+organization={IEEE}
 }
 ```
 

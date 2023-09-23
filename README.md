@@ -2,7 +2,9 @@
 [![Version](https://img.shields.io/badge/Version-1.0.0-brightgreen)](https://github.com/NYU-MLDA/OpenABC) 
 [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
 
-
+<p align="center">
+      <img src="./Overall framework3simplified.pdf" alt="drawing" width="800"/>
+</p>
 
 ## Overview
 

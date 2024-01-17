@@ -30,8 +30,8 @@ datasetDict = {
     'set6': ["mixed_train_data_set1.csv", "mixed_train_data_set1_extra.csv", 'mixed_train_data_set1_full.csv']
 }
 
-DUMP_DIR = "./SynthNETV5_set1-test"
-GRAPH_DIR = "./SynthNETV3_set1"
+DUMP_DIR = "./trained_model"
+GRAPH_DIR = "./trained_model"
 class NetlistGraphDataset(Dataset):
     def __init__(self, root, filePath, transform=None, pre_transform=None):
         self.filePath = osp.join(root, filePath)
@@ -88,11 +88,11 @@ def experiment(
     eval_mode = True
     print('eval_mode:', eval_mode)
     #eval_mode = False
-    # osp.join('/scratch/abc586/OpenABC-dataset/SynthV9_AND',RUN_DIR)
+    
 
     if not osp.exists(DUMP_DIR):
         os.mkdir(DUMP_DIR)
-    # env = gym.make('Hopper-v3')
+    
 
     max_ep_len = 20
     #env_targets = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
@@ -117,11 +117,6 @@ def experiment(
     trainDS = NetlistGraphDataset(root=ROOT_DIR, filePath=datasetDict["set6"][0])
 
     trainDS_full = NetlistGraphDataset(root=ROOT_DIR, filePath=datasetDict["set6"][1])
-
-    print(trainDS)
-    #print(testDS)
-    print(trainDS_full)
-    #print(testDS_full)
 
     num_classes = 1
     nodeEmbeddingDim = 3
@@ -158,74 +153,8 @@ def experiment(
     GRAPH_DIR = 'Graph_extracted_data'
     if not osp.exists(GRAPH_DIR):
         os.mkdir(GRAPH_DIR)
-    #print('Eval_mode:', eval_mode)
-
-    # GRAPH_FILE = 'Graph_extracted_data/' + 'mixed1_state' + str(state_dim) + '.pth'
-    # #GRAPH_FILE = 'Graph_extracted_data/' + bench_des_in_env + '.pth'
-    #
-    # if os.path.exists(GRAPH_FILE):
-    #     graph_state_list = torch.load(GRAPH_FILE)
-    #     print('Load graph data list:', GRAPH_FILE)
-
-    #print(graph_state_list[0])
-    #concat_states = np.concatenate(graph_state_list, axis=0)
-    #state_mean, state_std = np.mean(concat_states), np.std(concat_states)
-    #print('state_mean', state_mean)
-    #print('state_std', state_std)
-    # graph_state_list_normed = []
-
-    # for item in graph_state_list:
-    #     graph_state_list_normed.append((item-env.graph_state_mean)/env.graph_state_std)
-    # print('dataset normed')
-    #print(graph_state_list_normed[0])
-    #input()
+   
     trainDS.transform = transforms.Compose([lambda data: addNormalizedStates(data, targetStats, meanVarTargetDict, targetVar=targetLbl)])
-
-
-    # input()
-
-    # if os.path.exists(DATA_PROCESSED_FILE):
-    #     trainDS = torch.load(DATA_PROCESSED_FILE)
-    #     print('Load processed dataset:', DATA_PROCESSED_FILE)
-    # else:
-    #     count = 0
-    #     #for j in range(len(trainDS)):
-    #     for j,batch in enumerate(trainDS):
-    #         #data = addNormalizedStates(data, targetStats, meanVarTargetDict, trainDS_full, graph_state_list_normed, rtg_list, count, targetVar=targetLbl)
-    #
-    #
-    #
-    #
-    #
-    #
-    #         start_idx = j * 21
-    #         #data.states = torch.tensor([data.normANDgates, data.normDepth], dtype=torch.float32)
-    #         #data.rtg = torch.tensor([[data.and_nodes]], dtype=torch.float32)
-    #         trainDS[j].dones = torch.zeros(21)
-    #         trainDS[j].dones[-1] = 1
-    #         trainDS[j].timestep = torch.tensor([[0]])
-    #         trainDS[j].rtg_list = torch.tensor(rtg_list[start_idx:start_idx + 20]).squeeze()
-    #         trainDS[j].graph_state = torch.stack(graph_state_list[start_idx:start_idx + 20]).squeeze()
-    #         trainDS[j].graph_state_pred = torch.stack(graph_state_list[start_idx + 1:start_idx + 21]).squeeze()
-    #         # print(data)
-    #         trainDS[j].edge_index = None
-    #         trainDS[j].edge_type = None
-    #         trainDS[j].node_id = None
-    #         trainDS[j].node_type = None
-    #         trainDS[j].num_inverted_predecessors = None
-    #         # print(data)
-    #         # input()
-    #         for i in range(19):
-    #             trainDS[j].timestep = torch.cat((trainDS[j].timestep, torch.tensor([[i]])), -1)
-    #
-    #         count += 1
-    #     for data in trainDS:
-    #         print(data)
-    #         input()
-    #     print('Processed dataset count:', count+1)
-    #     torch.save(trainDS, DATA_PROCESSED_FILE)
-
-
 
     train_dl = DataLoader(trainDS, shuffle=True, batch_size=args.batch_size, pin_memory=True, num_workers=4)
 
@@ -241,27 +170,7 @@ def experiment(
     batch_size = variant['batch_size']
     num_eval_episodes = variant['num_eval_episodes']
     pct_traj = variant.get('pct_traj', 1.)
-    # def get_batch_openABC():
-    #     s, a, r, d, rtg, timesteps, mask, Graph = [], [], [], [], [], [], [], []
-    #     for temp, batch in enumerate(tqdm(train_dl, desc="Iteration", file=sys.stdout)):
-    #
-    #         # temp = batch.synVec
-    #         # a = torch.zeros(20*variant['batch_size'], act_dim).scatter(1, temp.unsqueeze(-1), 1)
-    #         # d = batch.dones
-    #         # s = batch.states
-    #         # Graph = batch
-    #         # r = batch.target.unsqueeze(dim=1)
-    #         # timesteps = batch.timestep
-    #         # rtg = batch.rtg.unsqueeze(dim=1)
-    #         temp = batch.synVec
-    #         a.append(torch.zeros(20 * variant['batch_size'], act_dim).scatter(1, temp.unsqueeze(-1), 1))
-    #         d.append(batch.dones)
-    #         s.append(batch.states)
-    #         Graph.append(batch)
-    #         r.append(batch.target.unsqueeze(dim=1))
-    #         timesteps = batch.timestep
-    #         rtg = batch.rtg.unsqueeze(dim=1)
-    #     return s, a, r, d, rtg, timesteps, mask, Graph
+    
     def eval_episodes(target_rtg, cur_model,model_state_pred, iterative_mode, k_repeat, beam_width):
         # env.iterative_mode = iterative_mode
         # if iterative_mode:
@@ -302,38 +211,7 @@ def experiment(
         #     # f'target_{target_rew}_length_std': np.std(lengths),
         # }
 
-    # def eval_episodes(target_rew):
-    #     def fn(model):
-    #         returns, lengths = [], []
-    #         for _ in range(num_eval_episodes):
-    #             with torch.no_grad():
-    #                 if model_type == 'dt':
-    #                     ret, length = evaluate_episode_rtg(
-    #                         env,
-    #                         state_dim,
-    #                         act_dim,
-    #                         model,
-    #                         max_ep_len=max_ep_len,
-    #                         scale=scale,
-    #                         target_return=target_rew/scale,
-    #                         mode=mode,
-    #                         state_mean=env.graph_state_mean,
-    #                         state_std=env.graph_state_std,
-    #                         device=device,
-    #                         using_state_predictor=using_state_predictor
-    #                     )
-    #
-    #             returns.append(ret)
-    #             lengths.append(length)
-    #         return {
-    #             target_rew: np.mean(returns)
-    #             # f'target_{target_rew}_return_mean': np.mean(returns)
-    #             # f'target_{target_rew}_return_std': np.std(returns),
-    #             # f'target_{target_rew}_length_mean': np.mean(lengths),
-    #             # f'target_{target_rew}_length_std': np.std(lengths),
-    #         }
-    #     return fn
-
+    
     dropout = 0.1
     model = DecisionTransformer(
             state_dim=state_dim,
